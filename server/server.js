@@ -14,6 +14,8 @@ const publicPath = path.join( __dirname, '../public');
 // C:\Users\javin\Desktop\CODING\01-Courses\04-Udemy\01-CompleteNodeJSDeveloper\node-chat-app\public
 const socketIO = require( 'socket.io' );
 
+const { generateMessage } = require( './utils/message.js' );
+
 const port = process.env.PORT || 3000;
 
 // load in and configure express
@@ -34,33 +36,15 @@ app.use( express.static( publicPath ));
 io.on( 'connection', ( socket ) => {
     console.log( 'New user connected.' );
 
-    socket.emit( 'newMessage', {
-      from: "Admin",
-      text: "Welcome to the chat!",
-      createdAt: new Date().getTime()
-    });
+    socket.emit( 'newMessage', generateMessage( 'Admin', 'Welcome to the chat app!' ));
 
-    socket.broadcast.emit( 'newMessage', {
-      from: "Admin",
-      text: "New User Joined.",
-      createdAt: new Date().getTime()
-    })
+    socket.broadcast.emit( 'newMessage', generateMessage( 'Admin', 'New user joined.'));
 
     socket.on( 'createMessage', ( message ) => {
       console.log( message );
       // io.emit() emits to every connection logged in
-      io.emit( 'newMessage', {
-        from: message.from,
-        text: message.text,
-        createdAt: new Date().getTime()
-      });
+      io.emit( 'newMessage', generateMessage( message.from, message.text ));
 
-      // broadcast sends event to everyone BUT the user themselves
-      // socket.broadcast.emit( 'newMessage', {
-      //   from: message.from,
-      //   text: message.text,
-      //   createdAt: new Date().getTime()
-      // });
     });
 });
 
