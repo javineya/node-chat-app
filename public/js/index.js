@@ -7,11 +7,7 @@ socket.on( 'connect', function() {
   //   to: 'vanessa@example.com',
   //   text: 'Hey, what up?'
   // });
-
-  socket.emit( 'createMessage', {
-    from: 'JesterVae',
-    text: 'Works for me!'
-  });
+  // socket.emit() emits to only one connection
 });
 
 socket.on( 'disconnect', function() {

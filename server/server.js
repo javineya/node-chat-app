@@ -43,11 +43,6 @@ io.on( 'connection', ( socket ) => {
     // socket.on( 'createEmail', ( newEmail ) => {
     //   console.log( 'createEmail', newEmail );
     // });
-    socket.emit( 'newMessage', {
-      from: 'vanessa',
-      text: 'Great! See you then!',
-      createdAt: 121234
-    });
 
     socket.on( 'disconnect', () => {
       console.log( 'Client disconnected.' );
@@ -55,6 +50,12 @@ io.on( 'connection', ( socket ) => {
 
     socket.on( 'createMessage', ( message ) => {
       console.log( message );
+      // io.emit() emits to every connection logged in
+      io.emit( 'newMessage', {
+        from: message.from,
+        text: message.text,
+        createdAt: new Date().getTime()
+      });
     });
 });
 
