@@ -29,12 +29,14 @@ socket.on( 'newLocationMessage', function( message ) {
 
 jQuery( '#message-form' ).on( 'submit', function( event ) {
   event.preventDefault();
+  let messageTextBox = jQuery('[name=message]');
 
   socket.emit( 'createMessage', {
     from: 'User',
-    text: jQuery('[name=message]').val()
+    text: messageTextBox.val()
   }, function() {
-
+    // clear message form after message sent
+    messageTextBox.val( '' );
   });
 });
 
@@ -44,14 +46,21 @@ locationButton.on( 'click', function () {
   if ( !navigator.geolocation ) {
     return alert( "Geolocation not supported by your browser." );
   }
+  // disable button while location sending
+  locationButton.attr( 'disabled', 'disabled' )
+    .text( 'Sending...' );
+
   // grab the user's geolocation
   navigator.geolocation.getCurrentPosition( function( position ) {
-    console.log( "CurrentPosition(): ", position.coords );
+    // re-enable button after location sent
+    locationButton.removeAttr( 'disabled' )
+      .text( 'Send Location' );
     socket.emit( 'createLocationMessage', {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
     });
   }, function() {
+    locationButton.removeAttr( 'disabled' );
     alert( "Unable to fetch location." );
   });
 });
