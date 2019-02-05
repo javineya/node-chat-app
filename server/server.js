@@ -81,8 +81,6 @@ io.on( 'connection', ( socket ) => {
           coords.longitude
         ));
       }
-
-
     });
 
     socket.on( 'disconnect', () => {
